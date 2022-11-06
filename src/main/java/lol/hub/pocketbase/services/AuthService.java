@@ -4,52 +4,43 @@ import com.google.gson.Gson;
 import lol.hub.pocketbase.AuthRole;
 import lol.hub.pocketbase.HttpClient;
 import lol.hub.pocketbase.models.ApiError;
-import lol.hub.pocketbase.models.transfer.LoginRequestBody;
-import lol.hub.pocketbase.models.transfer.LoginResponseBody;
 
 /**
  * <a href="https://pocketbase.io/docs/api-authentication">api docs</a>
  */
 public class AuthService extends BaseService {
-    public AuthService(HttpClient http, Gson gson) {
+    private final AdminService adminService;
+    private final UserService userService;
+
+    public AuthService(HttpClient http, Gson gson, AdminService adminService, UserService userService) {
         super(http, gson);
+        this.adminService = adminService;
+        this.userService = userService;
     }
 
     public boolean loginAdmin(String email, String password) throws ApiError {
-        LoginResponseBody.Admin response = http.postJson("/api/admins/auth-via-email", gson.toJson(new LoginRequestBody(email, password)), LoginResponseBody.Admin.class);
-        http.setAuth(AuthRole.ADMIN, response.token());
-        boolean success = currentRole() == AuthRole.ADMIN;
-        if (success) log.info("Logged in with role: admin");
-        else log.warn("Login failed, actual role: " + currentRole());
-        return success;
+        return adminService.authViaEmail(email, password);
     }
 
     public boolean loginUser(String email, String password) throws ApiError {
-        LoginResponseBody.User response = http.postJson("/api/users/auth-via-email", gson.toJson(new LoginRequestBody(email, password)), LoginResponseBody.User.class);
-        http.setAuth(AuthRole.USER, response.token());
-        boolean success = currentRole() == AuthRole.USER;
-        if (success) log.info("Logged in with role: user");
-        else log.warn("Login failed, actual role: " + currentRole());
-        return success;
+        return userService.authViaEmail(email, password);
     }
 
-    public boolean loginGuest() {
+    public boolean lougout() {
         http.setAuth(AuthRole.GUEST, null);
         boolean success = currentRole() == AuthRole.GUEST;
-        if (success) log.info("Logged in with role: guest");
-        else log.warn("Login failed, actual role: " + currentRole());
+        if (success) log.info("Logged out, role: guest");
+        else log.warn("Logout failed, current role: " + currentRole());
         return success;
     }
 
     public void refreshToken() throws ApiError {
         switch (currentRole()) {
             case ADMIN -> {
-                LoginResponseBody.Admin response = http.postJson("/api/admins/refresh", "", LoginResponseBody.Admin.class);
-                http.setAuth(AuthRole.ADMIN, response.token());
+                adminService.authRefresh();
             }
             case USER -> {
-                LoginResponseBody.User response = http.postJson("/api/users/refresh", "", LoginResponseBody.User.class);
-                http.setAuth(AuthRole.USER, response.token());
+                userService.authRefresh();
             }
             case GUEST -> http.setAuth(AuthRole.GUEST, null);
         }
@@ -58,8 +49,4 @@ public class AuthService extends BaseService {
     public AuthRole currentRole() {
         return http.getAuth();
     }
-
-    // TODO: GET  /api/users/auth-methods
-    // TODO: POST /api/users/auth-via-oauth2
-
 }

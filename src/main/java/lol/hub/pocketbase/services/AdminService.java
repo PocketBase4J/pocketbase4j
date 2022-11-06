@@ -2,10 +2,13 @@ package lol.hub.pocketbase.services;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import lol.hub.pocketbase.AuthRole;
 import lol.hub.pocketbase.HttpClient;
 import lol.hub.pocketbase.models.Admin;
 import lol.hub.pocketbase.models.ApiError;
 import lol.hub.pocketbase.models.Page;
+import lol.hub.pocketbase.models.transfer.LoginRequestBody;
+import lol.hub.pocketbase.models.transfer.LoginResponseBody;
 
 /**
  * <a href="https://pocketbase.io/docs/api-admins">api docs</a>
@@ -15,16 +18,30 @@ public class AdminService extends BaseService {
         super(http, gson);
     }
 
-    /* TODO:
-	POST   "/api/admins/request-password-reset"
-	POST   "/api/admins/confirm-password-reset"
-	POST   "/api/admins"
-	GET    "/api/admins/:id"
-	PATCH  "/api/admins/:id"
-	DELETE "/api/admins/:id"
-     */
+    public boolean authViaEmail(String email, String password) throws ApiError {
+        LoginResponseBody.Admin response = http.postJson("/api/admins/auth-via-email", gson.toJson(new LoginRequestBody(email, password)), LoginResponseBody.Admin.class);
+        http.setAuth(AuthRole.ADMIN, response.token());
+        boolean success = http.getAuth() == AuthRole.ADMIN;
+        if (success) log.info("Logged in with role: admin");
+        else log.warn("Login failed, current role: " + http.getAuth());
+        return success;
+    }
 
-    public Page<Admin> getAdmins() throws ApiError {
+    public void authRefresh() throws ApiError {
+        LoginResponseBody.Admin response = http.postJson("/api/admins/refresh", "", LoginResponseBody.Admin.class);
+        http.setAuth(AuthRole.ADMIN, response.token());
+    }
+
+    public Page<Admin> listAdmins() throws ApiError {
         return http.getJson("/api/admins", TypeToken.getParameterized(Page.class, Admin.class).getType());
     }
+
+    /* TODO:
+	POST "/api/admins/request-password-reset"
+	POST "/api/admins/confirm-password-reset"
+	POST "/api/admins"
+	GET "/api/admins/:id"
+	PATCH "/api/admins/:id"
+	DELETE "/api/admins/:id"
+     */
 }

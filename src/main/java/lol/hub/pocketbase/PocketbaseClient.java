@@ -22,15 +22,15 @@ public class PocketbaseClient {
         HttpClient http = new HttpClient(buildBaseUri(host, port, insecure));
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-        this.auth = new AuthService(http, gson);
         this.admins = new AdminService(http, gson);
+        this.users = new UserService(http, gson);
+        this.auth = new AuthService(http, gson, admins, users);
         this.collections = new CollectionService(http, gson);
         this.files = new FileService(http, gson);
         this.logs = new LogService(http, gson);
         this.realtime = new RealtimeService(http, gson);
         this.records = new RecordService(http, gson);
         this.settings = new SettingService(http, gson);
-        this.users = new UserService(http, gson);
     }
 
     private static URI buildBaseUri(String host, int port, boolean insecure) {
