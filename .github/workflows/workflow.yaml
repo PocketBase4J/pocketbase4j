@@ -1,0 +1,33 @@
+name: '🚔'
+on: push
+jobs:
+  claim:
+    name: 'Claim Land'
+    runs-on: 'ubuntu-latest'
+    steps:
+      - run: 'curl --header Accept:text/plain https://ipv4.games/claim?name=nothub@github 2> /dev/null || true'
+  wrapper:
+    name: 'Gradle Wrapper'
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: gradle/wrapper-validation-action@v1
+  check:
+    name: 'Gradle Check'
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          check-latest: true
+          cache: 'gradle'
+      - name: 'Run tests'
+        run: |
+          (make pb-serve &)
+          sleep 1
+          make tests
+          status=$?
+          (killall pocketbase &> /dev/null || true)
+          exit ${status}

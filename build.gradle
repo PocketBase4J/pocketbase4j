@@ -1,0 +1,105 @@
+import org.gradle.process.internal.ExecException
+
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+    id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
+}
+
+group = 'lol.hub'
+version = { ->
+    def pattern = 'v[0-9]*'
+    def fallback = 'indev'
+    def result = new ByteArrayOutputStream()
+    try {
+        exec {
+            commandLine 'git', 'describe', '--tags', '--abbrev=0', '--match', pattern
+            ignoreExitValue = true
+            standardOutput = result
+            // void stderr
+            errorOutput = new OutputStream() {
+                @Override
+                void write(int b) throws IOException {}
+            }
+        }
+    } catch (ExecException ignored) {
+        ignored.printStackTrace()
+        println 'No git tag found with format \'' + pattern + '\', using fallback version identifier \'' + fallback + '\'.'
+        return fallback
+    }
+    return result.toString().trim().replaceFirst('v', '')
+}()
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.3'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.4'
+    implementation 'com.google.code.gson:gson:2.10'
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.9.1'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.9.1'
+    testImplementation group: 'net.jodah', name: 'concurrentunit', version: '0.4.6'
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(17)
+    withJavadocJar()
+    withSourcesJar()
+}
+
+javadoc {
+    options.addBooleanOption('html5', true)
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            pom {
+                name = project.name
+                description = 'Java PocketBase Client Library'
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://raw.githubusercontent.com/nothub/pocketbase/master/LICENSE.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        name = 'hub'
+                        email = 'code@hub.lol'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/nothub/pocketbase.git'
+                    developerConnection = 'scm:git:ssh://github.com/nothub/pocketbase.git'
+                    url = 'https://github.com/nothub/pocketbase'
+                }
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
+    }
+}
