@@ -66,6 +66,10 @@ public class HttpClient {
         return readBody(responseBody, responseBodyType);
     }
 
+    // TODO: PUT
+    // TODO: PATCH
+    // TODO: DELETE
+
     private String send(HttpRequest request) throws ApiError {
         HttpResponse<String> response;
         try {

@@ -6,7 +6,8 @@
     - path
     - body
     - query
-- page handling
+- pagination handling
 - schema handling
 - records
+- collections
 - realtime sse
