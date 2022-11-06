@@ -3,6 +3,9 @@ package lol.hub.pocketbase.services;
 import com.google.gson.Gson;
 import lol.hub.pocketbase.HttpClient;
 
+/**
+ * <a href="https://pocketbase.io/docs/api-users/">api docs</a>
+ */
 public class UserService extends BaseService {
     public UserService(HttpClient http, Gson gson) {
         super(http, gson);

@@ -7,6 +7,9 @@ import lol.hub.pocketbase.models.Admin;
 import lol.hub.pocketbase.models.ApiError;
 import lol.hub.pocketbase.models.Page;
 
+/**
+ * <a href="https://pocketbase.io/docs/api-admins">api docs</a>
+ */
 public class AdminService extends BaseService {
     public AdminService(HttpClient http, Gson gson) {
         super(http, gson);

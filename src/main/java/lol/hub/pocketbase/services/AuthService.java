@@ -7,6 +7,9 @@ import lol.hub.pocketbase.models.ApiError;
 import lol.hub.pocketbase.models.transfer.LoginRequestBody;
 import lol.hub.pocketbase.models.transfer.LoginResponseBody;
 
+/**
+ * <a href="https://pocketbase.io/docs/api-authentication">api docs</a>
+ */
 public class AuthService extends BaseService {
     public AuthService(HttpClient http, Gson gson) {
         super(http, gson);

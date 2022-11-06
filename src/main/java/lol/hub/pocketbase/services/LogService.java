@@ -10,6 +10,9 @@ import lol.hub.pocketbase.models.RequestLog;
 
 import java.util.List;
 
+/**
+ * <a href="https://pocketbase.io/docs/api-logs/">api docs</a>
+ */
 public class LogService extends BaseService {
     public LogService(HttpClient http, Gson gson) {
         super(http, gson);
