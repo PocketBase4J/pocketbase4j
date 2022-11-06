@@ -1,5 +1,8 @@
 package lol.hub.pocketbase.models;
 
+import lombok.ToString;
+
+@ToString(callSuper = true)
 public class Account extends BaseModel {
     String email;
     String lastResetSentAt; // TODO: timestamp type
@@ -10,16 +13,5 @@ public class Account extends BaseModel {
 
     public String lastResetSentAt() {
         return lastResetSentAt;
-    }
-
-    @Override
-    public String toString() {
-        return "Account{" +
-            "email='" + email + '\'' +
-            ", lastResetSentAt='" + lastResetSentAt + '\'' +
-            ", id='" + id + '\'' +
-            ", created='" + created + '\'' +
-            ", updated='" + updated + '\'' +
-            '}';
     }
 }

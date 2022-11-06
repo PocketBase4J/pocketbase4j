@@ -1,7 +1,9 @@
 package lol.hub.pocketbase.models;
 
 import com.google.gson.JsonObject;
+import lombok.ToString;
 
+@ToString(callSuper = true)
 public class RequestLog extends BaseModel {
     String url;
     String method;
@@ -47,23 +49,5 @@ public class RequestLog extends BaseModel {
 
     public JsonObject meta() {
         return meta;
-    }
-
-    @Override
-    public String toString() {
-        return "RequestLog{" +
-            "url='" + url + '\'' +
-            ", method='" + method + '\'' +
-            ", status=" + status +
-            ", auth='" + auth + '\'' +
-            ", userIp='" + userIp + '\'' +
-            ", remoteIp='" + remoteIp + '\'' +
-            ", referer='" + referer + '\'' +
-            ", userAgent='" + userAgent + '\'' +
-            ", meta=" + meta +
-            ", id='" + id + '\'' +
-            ", created='" + created + '\'' +
-            ", updated='" + updated + '\'' +
-            '}';
     }
 }

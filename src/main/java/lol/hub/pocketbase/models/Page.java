@@ -1,7 +1,8 @@
 package lol.hub.pocketbase.models;
 
-import java.util.Arrays;
+import lombok.ToString;
 
+@ToString(callSuper = true)
 public final class Page<T> extends BaseModel {
     int page;
     int perPage;
@@ -27,19 +28,5 @@ public final class Page<T> extends BaseModel {
 
     public T[] items() {
         return items;
-    }
-
-    @Override
-    public String toString() {
-        return "Page{" +
-            "page=" + page +
-            ", perPage=" + perPage +
-            ", totalItems=" + totalItems +
-            ", totalPages=" + totalPages +
-            ", items=" + Arrays.toString(items) +
-            ", id='" + id + '\'' +
-            ", created='" + created + '\'' +
-            ", updated='" + updated + '\'' +
-            '}';
     }
 }

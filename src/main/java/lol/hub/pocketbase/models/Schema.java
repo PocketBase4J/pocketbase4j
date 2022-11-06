@@ -1,7 +1,9 @@
 package lol.hub.pocketbase.models;
 
 import com.google.gson.JsonObject;
+import lombok.ToString;
 
+@ToString(callSuper = true)
 public class Schema extends BaseModel {
     Field[] fields;
 
@@ -9,6 +11,7 @@ public class Schema extends BaseModel {
         return fields;
     }
 
+    @ToString(callSuper = true)
     private static class Field {
         boolean system;
         String id;
@@ -44,19 +47,6 @@ public class Schema extends BaseModel {
 
         public JsonObject options() {
             return options;
-        }
-
-        @Override
-        public String toString() {
-            return "Field{" +
-                "system=" + system +
-                ", id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", required=" + required +
-                ", unique=" + unique +
-                ", options=" + options +
-                '}';
         }
     }
 }

@@ -1,5 +1,8 @@
 package lol.hub.pocketbase.models;
 
+import lombok.ToString;
+
+@ToString(callSuper = true)
 public class LogStats extends BaseModel {
     double total;
     String date; // TODO: timestamp type
@@ -10,16 +13,5 @@ public class LogStats extends BaseModel {
 
     public String date() {
         return date;
-    }
-
-    @Override
-    public String toString() {
-        return "LogStats{" +
-            "total=" + total +
-            ", date='" + date + '\'' +
-            ", id='" + id + '\'' +
-            ", created='" + created + '\'' +
-            ", updated='" + updated + '\'' +
-            '}';
     }
 }

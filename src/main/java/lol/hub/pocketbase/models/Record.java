@@ -1,7 +1,9 @@
 package lol.hub.pocketbase.models;
 
 import com.google.gson.JsonObject;
+import lombok.ToString;
 
+@ToString(callSuper = true)
 public class Record extends BaseModel {
     Collection collection;
     JsonObject data;
@@ -17,17 +19,5 @@ public class Record extends BaseModel {
 
     public JsonObject expand() {
         return expand;
-    }
-
-    @Override
-    public String toString() {
-        return "Record{" +
-            "collection=" + collection +
-            ", data=" + data +
-            ", expand=" + expand +
-            ", id='" + id + '\'' +
-            ", created='" + created + '\'' +
-            ", updated='" + updated + '\'' +
-            '}';
     }
 }

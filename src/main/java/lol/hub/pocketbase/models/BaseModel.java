@@ -1,5 +1,8 @@
 package lol.hub.pocketbase.models;
 
+import lombok.ToString;
+
+@ToString
 public abstract class BaseModel {
     String id;
     String created; // TODO: timestamp type

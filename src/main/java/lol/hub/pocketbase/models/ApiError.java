@@ -1,7 +1,9 @@
 package lol.hub.pocketbase.models;
 
 import com.google.gson.JsonObject;
+import lombok.ToString;
 
+@ToString
 public class ApiError extends Exception {
     int code;
     String message;
@@ -24,14 +26,5 @@ public class ApiError extends Exception {
 
     public JsonObject data() {
         return data;
-    }
-
-    @Override
-    public String toString() {
-        return "ApiError{" +
-            "code=" + code +
-            ", message='" + message + '\'' +
-            ", data=" + data +
-            '}';
     }
 }

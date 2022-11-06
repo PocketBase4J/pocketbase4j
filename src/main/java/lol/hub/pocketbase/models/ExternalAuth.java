@@ -1,5 +1,8 @@
 package lol.hub.pocketbase.models;
 
+import lombok.ToString;
+
+@ToString(callSuper = true)
 public class ExternalAuth extends BaseModel {
     String userId;
     String provider;
@@ -15,17 +18,5 @@ public class ExternalAuth extends BaseModel {
 
     public String providerId() {
         return providerId;
-    }
-
-    @Override
-    public String toString() {
-        return "ExternalAuth{" +
-            "userId='" + userId + '\'' +
-            ", provider='" + provider + '\'' +
-            ", providerId='" + providerId + '\'' +
-            ", id='" + id + '\'' +
-            ", created='" + created + '\'' +
-            ", updated='" + updated + '\'' +
-            '}';
     }
 }
