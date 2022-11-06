@@ -1,8 +1,10 @@
 package lol.hub.pocketbase.models;
 
 import com.google.gson.JsonObject;
+import lombok.Getter;
 import lombok.ToString;
 
+@Getter
 @ToString
 public class ApiError extends Exception {
     int code;
@@ -14,17 +16,5 @@ public class ApiError extends Exception {
         this.code = code;
         this.message = message;
         this.data = data;
-    }
-
-    public int code() {
-        return code;
-    }
-
-    public String message() {
-        return getMessage();
-    }
-
-    public JsonObject data() {
-        return data;
     }
 }

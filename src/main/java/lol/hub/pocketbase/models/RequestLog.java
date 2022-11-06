@@ -1,8 +1,10 @@
 package lol.hub.pocketbase.models;
 
 import com.google.gson.JsonObject;
+import lombok.Getter;
 import lombok.ToString;
 
+@Getter
 @ToString(callSuper = true)
 public class RequestLog extends BaseModel {
     String url;
@@ -14,40 +16,4 @@ public class RequestLog extends BaseModel {
     String referer;
     String userAgent;
     JsonObject meta;
-
-    public String url() {
-        return url;
-    }
-
-    public String method() {
-        return method;
-    }
-
-    public int status() {
-        return status;
-    }
-
-    public String auth() {
-        return auth;
-    }
-
-    public String userIp() {
-        return userIp;
-    }
-
-    public String remoteIp() {
-        return remoteIp;
-    }
-
-    public String referer() {
-        return referer;
-    }
-
-    public String userAgent() {
-        return userAgent;
-    }
-
-    public JsonObject meta() {
-        return meta;
-    }
 }

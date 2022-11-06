@@ -20,7 +20,7 @@ public class AdminService extends BaseService {
 
     public boolean authViaEmail(String email, String password) throws ApiError {
         LoginResponseBody.Admin response = http.postJson("/api/admins/auth-via-email", gson.toJson(new LoginRequestBody(email, password)), LoginResponseBody.Admin.class);
-        http.setAuth(AuthRole.ADMIN, response.token());
+        http.setAuth(AuthRole.ADMIN, response.getToken());
         boolean success = http.getAuth() == AuthRole.ADMIN;
         if (success) log.info("Logged in with role: admin");
         else log.warn("Login failed, current role: " + http.getAuth());
@@ -29,7 +29,7 @@ public class AdminService extends BaseService {
 
     public void authRefresh() throws ApiError {
         LoginResponseBody.Admin response = http.postJson("/api/admins/refresh", "", LoginResponseBody.Admin.class);
-        http.setAuth(AuthRole.ADMIN, response.token());
+        http.setAuth(AuthRole.ADMIN, response.getToken());
     }
 
     public Page<Admin> listAdmins() throws ApiError {

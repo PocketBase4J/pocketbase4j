@@ -29,15 +29,15 @@ class ServiceTests {
     void getAdminsAsAdmin() {
         Assertions.assertDoesNotThrow(() -> {
             Page<Admin> adminPage = adminClient.admins().listAdmins();
-            Assertions.assertTrue(Arrays.stream(adminPage.items())
-                .anyMatch(a -> a.email().equals(adminEmail)));
+            Assertions.assertTrue(Arrays.stream(adminPage.getItems())
+                .anyMatch(a -> a.getEmail().equals(adminEmail)));
         });
     }
 
     @Test
     void getAdminsAsUser() {
         ApiError error = Assertions.assertThrows(ApiError.class, () -> userClient.admins().listAdmins());
-        Assertions.assertEquals(401, error.code());
+        Assertions.assertEquals(401, error.getCode());
     }
 
     @Test

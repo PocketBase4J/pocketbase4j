@@ -1,7 +1,9 @@
 package lol.hub.pocketbase.models;
 
+import lombok.Getter;
 import lombok.ToString;
 
+@Getter
 @ToString(callSuper = true)
 public class Collection extends BaseModel {
     String name;
@@ -12,36 +14,4 @@ public class Collection extends BaseModel {
     String createRule;
     String updateRule;
     String deleteRule;
-
-    public String name() {
-        return name;
-    }
-
-    public boolean system() {
-        return system;
-    }
-
-    public Schema schema() {
-        return schema;
-    }
-
-    public String listRule() {
-        return listRule;
-    }
-
-    public String viewRule() {
-        return viewRule;
-    }
-
-    public String createRule() {
-        return createRule;
-    }
-
-    public String updateRule() {
-        return updateRule;
-    }
-
-    public String deleteRule() {
-        return deleteRule;
-    }
 }
