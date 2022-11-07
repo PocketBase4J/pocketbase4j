@@ -8,15 +8,15 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public class PocketbaseClient {
-    private final AuthService auth;
-    private final AdminService admins;
-    private final CollectionService collections;
-    private final FileService files;
-    private final LogService logs;
-    private final RealtimeService realtime;
-    private final RecordService records;
-    private final SettingService settings;
-    private final UserService users;
+    public final AuthService auth;
+    public final AdminService admins;
+    public final CollectionService collections;
+    public final FileService files;
+    public final LogService logs;
+    public final RealtimeService realtime;
+    public final RecordService records;
+    public final SettingService settings;
+    public final UserService users;
 
     public PocketbaseClient(String host, int port, boolean insecure) {
         HttpClient http = new HttpClient(buildBaseUri(host, port, insecure));
@@ -40,41 +40,5 @@ public class PocketbaseClient {
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public AuthService auth() {
-        return auth;
-    }
-
-    public AdminService admins() {
-        return admins;
-    }
-
-    public CollectionService collections() {
-        return collections;
-    }
-
-    public FileService files() {
-        return files;
-    }
-
-    public LogService logs() {
-        return logs;
-    }
-
-    public RealtimeService realtime() {
-        return realtime;
-    }
-
-    public RecordService records() {
-        return records;
-    }
-
-    public SettingService settings() {
-        return settings;
-    }
-
-    public UserService users() {
-        return users;
     }
 }
