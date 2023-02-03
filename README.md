@@ -1,5 +1,7 @@
 # PocketBase4J
 
+This project is __WIP__ and should not yet be used in any shape or form!
+
 ## TODO
 
 - parameters
