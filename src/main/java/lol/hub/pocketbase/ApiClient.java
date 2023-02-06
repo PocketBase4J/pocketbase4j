@@ -14,7 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ApiClient {
-    private static final Map.Entry<String, String> contentTypeJsonHeader = Map.entry("Content-Type", "application/json");
+    private static final String HEADER_USER_AGENT = "PocketBase4J/0.1";
+    private static final String HEADER_CONTENT_TYPE_JSON = "application/json";
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final URI baseUrl;
     private final HttpClient client;
@@ -25,8 +26,8 @@ public class ApiClient {
         this.authRole = AuthRole.GUEST;
         this.baseUrl = baseUrl;
         this.client = HttpClient.newHttpClient();
-        this.headers.put("User-Agent", "PocketBase-Java/0.1");
-        this.headers.put("Accept", "application/json");
+        this.headers.put("User-Agent", HEADER_USER_AGENT);
+        this.headers.put("Accept", HEADER_CONTENT_TYPE_JSON);
     }
 
     public static boolean isStatusOkay(int status) {
@@ -61,7 +62,7 @@ public class ApiClient {
             .uri(baseUrl.resolve(path))
             .POST(HttpRequest.BodyPublishers.ofString(requestBody));
         headers.forEach(builder::header);
-        builder.header(contentTypeJsonHeader.getKey(), contentTypeJsonHeader.getValue());
+        builder.header("Content-Type", HEADER_CONTENT_TYPE_JSON);
         HttpRequest request = builder.build();
         String responseBody = send(request);
         return readBody(responseBody, responseBodyType);
