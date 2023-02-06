@@ -3,17 +3,17 @@ package lol.hub.pocketbase.models.transfer;
 import lombok.Getter;
 import lombok.ToString;
 
-public class LoginResponseBody {
+public class AuthResponseBody {
     @Getter
     @ToString(callSuper = true)
-    public static final class Admin {
+    public class Admin extends AuthResponseBody {
         String token;
         Admin admin;
     }
 
     @Getter
     @ToString(callSuper = true)
-    public static final class User {
+    public class User extends AuthResponseBody {
         String token;
         User user;
     }
