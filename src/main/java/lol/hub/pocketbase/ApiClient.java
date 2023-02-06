@@ -3,6 +3,7 @@ package lol.hub.pocketbase;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lol.hub.pocketbase.models.ApiError;
+import lol.hub.pocketbase.stores.BaseAuthStore;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -10,7 +11,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,14 +19,20 @@ public class ApiClient {
     private static final String HEADER_CONTENT_TYPE_JSON = "application/json";
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final URI baseUrl;
-    private final HttpClient client;
+    private final HttpClient httpClient;
     private final Map<String, String> headers = new HashMap<>();
     private AuthRole authRole;
+    private BaseAuthStore authStore;
 
     public ApiClient(URI baseUrl) {
-        this.authRole = AuthRole.GUEST;
+        this(baseUrl, new BaseAuthStore());
+    }
+
+    public ApiClient(URI baseUrl, BaseAuthStore authStore) {
         this.baseUrl = baseUrl;
-        this.client = HttpClient.newHttpClient();
+        this.authRole = AuthRole.GUEST;
+        this.authStore = authStore;
+        this.httpClient = HttpClient.newHttpClient();
         this.headers.put("User-Agent", HEADER_USER_AGENT);
         this.headers.put("Accept", HEADER_CONTENT_TYPE_JSON);
     }
@@ -48,39 +54,24 @@ public class ApiClient {
         return this.authRole;
     }
 
-    private <T> T prepareRequest(String method, String path, HttpRequest.BodyPublisher bodyPublisher, Type responseBodyType, Map<String, String> headers) throws ApiError {
+    public <T> T send(String method, String path, String requestBody, Type responseBodyType) throws ApiError {
+        HashMap<String, String> headers = new HashMap<>();
+        HttpRequest.BodyPublisher bodyPublisher = requestBody == null ? HttpRequest.BodyPublishers.noBody() : HttpRequest.BodyPublishers.ofString(requestBody);
         HttpRequest.Builder builder = HttpRequest.newBuilder()
             .uri(baseUrl.resolve(path))
             .method(method, bodyPublisher);
         headers.putAll(this.headers);
         headers.forEach(builder::header);
+        if (this.authStore.getToken() != null) {
+            builder.header("Authorization", this.authStore.getToken());
+        }
         return readBody(send(builder.build()), responseBodyType);
-    }
-
-    public <T> T get(String path, Type responseBodyType) throws ApiError {
-        return prepareRequest("GET", path, HttpRequest.BodyPublishers.noBody(), responseBodyType, Collections.emptyMap());
-    }
-
-    public <T> T post(String path, String requestBody, Type responseBodyType) throws ApiError {
-        return prepareRequest("POST", path, HttpRequest.BodyPublishers.ofString(requestBody), responseBodyType, Collections.singletonMap("Content-Type", HEADER_CONTENT_TYPE_JSON));
-    }
-
-    public <T> T put(String path, String requestBody, Type responseBodyType) throws ApiError {
-        return prepareRequest("PUT", path, HttpRequest.BodyPublishers.ofString(requestBody), responseBodyType, Collections.singletonMap("Content-Type", HEADER_CONTENT_TYPE_JSON));
-    }
-
-    public <T> T patch(String path, String requestBody, Type responseBodyType) throws ApiError {
-        return prepareRequest("PATCH", path, HttpRequest.BodyPublishers.ofString(requestBody), responseBodyType, Collections.singletonMap("Content-Type", HEADER_CONTENT_TYPE_JSON));
-    }
-
-    public <T> T delete(String path, Type responseBodyType) throws ApiError {
-        return prepareRequest("DELETE", path, HttpRequest.BodyPublishers.noBody(), responseBodyType, Collections.emptyMap());
     }
 
     private String send(HttpRequest request) throws ApiError {
         HttpResponse<String> response;
         try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
