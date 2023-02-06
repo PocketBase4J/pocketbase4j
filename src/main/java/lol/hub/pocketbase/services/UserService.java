@@ -16,7 +16,7 @@ public class UserService extends BaseService {
     }
 
     public boolean authViaEmail(String email, String password) throws ApiError {
-        LoginResponseBody.User response = http.postJson("/api/users/auth-via-email", gson.toJson(new LoginRequestBody(email, password)), LoginResponseBody.User.class);
+        LoginResponseBody.User response = http.post("/api/users/auth-via-email", gson.toJson(new LoginRequestBody(email, password)), LoginResponseBody.User.class);
         http.setAuth(AuthRole.USER, response.getToken());
         boolean success = http.getAuth() == AuthRole.USER;
         if (success) log.info("Logged in with role: user");
@@ -25,7 +25,7 @@ public class UserService extends BaseService {
     }
 
     public void authRefresh() throws ApiError {
-        LoginResponseBody.User response = http.postJson("/api/users/refresh", "", LoginResponseBody.User.class);
+        LoginResponseBody.User response = http.post("/api/users/refresh", "", LoginResponseBody.User.class);
         http.setAuth(AuthRole.USER, response.getToken());
     }
 

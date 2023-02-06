@@ -10,6 +10,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,30 +48,34 @@ public class ApiClient {
         return this.authRole;
     }
 
-    public <T> T getJson(String path, Type responseBodyType) throws ApiError {
+    private <T> T prepareRequest(String method, String path, HttpRequest.BodyPublisher bodyPublisher, Type responseBodyType, Map<String, String> headers) throws ApiError {
         HttpRequest.Builder builder = HttpRequest.newBuilder()
             .uri(baseUrl.resolve(path))
-            .GET();
+            .method(method, bodyPublisher);
+        headers.putAll(this.headers);
         headers.forEach(builder::header);
-        HttpRequest request = builder.build();
-        String responseBody = send(request);
-        return readBody(responseBody, responseBodyType);
+        return readBody(send(builder.build()), responseBodyType);
     }
 
-    public <T> T postJson(String path, String requestBody, Class<T> responseBodyType) throws ApiError {
-        HttpRequest.Builder builder = HttpRequest.newBuilder()
-            .uri(baseUrl.resolve(path))
-            .POST(HttpRequest.BodyPublishers.ofString(requestBody));
-        headers.forEach(builder::header);
-        builder.header("Content-Type", HEADER_CONTENT_TYPE_JSON);
-        HttpRequest request = builder.build();
-        String responseBody = send(request);
-        return readBody(responseBody, responseBodyType);
+    public <T> T get(String path, Type responseBodyType) throws ApiError {
+        return prepareRequest("GET", path, HttpRequest.BodyPublishers.noBody(), responseBodyType, Collections.emptyMap());
     }
 
-    // TODO: PUT
-    // TODO: PATCH
-    // TODO: DELETE
+    public <T> T post(String path, String requestBody, Type responseBodyType) throws ApiError {
+        return prepareRequest("POST", path, HttpRequest.BodyPublishers.ofString(requestBody), responseBodyType, Collections.singletonMap("Content-Type", HEADER_CONTENT_TYPE_JSON));
+    }
+
+    public <T> T put(String path, String requestBody, Type responseBodyType) throws ApiError {
+        return prepareRequest("PUT", path, HttpRequest.BodyPublishers.ofString(requestBody), responseBodyType, Collections.singletonMap("Content-Type", HEADER_CONTENT_TYPE_JSON));
+    }
+
+    public <T> T patch(String path, String requestBody, Type responseBodyType) throws ApiError {
+        return prepareRequest("PATCH", path, HttpRequest.BodyPublishers.ofString(requestBody), responseBodyType, Collections.singletonMap("Content-Type", HEADER_CONTENT_TYPE_JSON));
+    }
+
+    public <T> T delete(String path, Type responseBodyType) throws ApiError {
+        return prepareRequest("DELETE", path, HttpRequest.BodyPublishers.noBody(), responseBodyType, Collections.emptyMap());
+    }
 
     private String send(HttpRequest request) throws ApiError {
         HttpResponse<String> response;
