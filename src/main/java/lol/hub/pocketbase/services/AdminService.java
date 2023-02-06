@@ -3,7 +3,7 @@ package lol.hub.pocketbase.services;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import lol.hub.pocketbase.AuthRole;
-import lol.hub.pocketbase.HttpClient;
+import lol.hub.pocketbase.ApiClient;
 import lol.hub.pocketbase.models.Admin;
 import lol.hub.pocketbase.models.ApiError;
 import lol.hub.pocketbase.models.Page;
@@ -14,7 +14,7 @@ import lol.hub.pocketbase.models.transfer.LoginResponseBody;
  * <a href="https://pocketbase.io/docs/api-admins">api docs</a>
  */
 public class AdminService extends BaseService {
-    public AdminService(HttpClient http, Gson gson) {
+    public AdminService(ApiClient http, Gson gson) {
         super(http, gson);
     }
 

@@ -19,7 +19,7 @@ public class PocketbaseClient {
     public final UserService users;
 
     public PocketbaseClient(String host, int port, boolean insecure) {
-        HttpClient http = new HttpClient(buildBaseUri(host, port, insecure));
+        ApiClient http = new ApiClient(buildBaseUri(host, port, insecure));
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         this.admins = new AdminService(http, gson);

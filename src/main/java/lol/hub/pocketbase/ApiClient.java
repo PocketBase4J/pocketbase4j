@@ -7,23 +7,24 @@ import lol.hub.pocketbase.models.ApiError;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URI;
+import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HttpClient {
+public class ApiClient {
     private static final Map.Entry<String, String> contentTypeJsonHeader = Map.entry("Content-Type", "application/json");
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final URI baseUrl;
-    private final java.net.http.HttpClient client;
+    private final HttpClient client;
     private final Map<String, String> headers = new HashMap<>();
     private AuthRole authRole;
 
-    public HttpClient(URI baseUrl) {
+    public ApiClient(URI baseUrl) {
         this.authRole = AuthRole.GUEST;
         this.baseUrl = baseUrl;
-        this.client = java.net.http.HttpClient.newHttpClient();
+        this.client = HttpClient.newHttpClient();
         this.headers.put("User-Agent", "PocketBase-Java/0.1");
         this.headers.put("Accept", "application/json");
     }

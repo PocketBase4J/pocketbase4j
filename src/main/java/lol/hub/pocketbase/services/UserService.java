@@ -2,7 +2,7 @@ package lol.hub.pocketbase.services;
 
 import com.google.gson.Gson;
 import lol.hub.pocketbase.AuthRole;
-import lol.hub.pocketbase.HttpClient;
+import lol.hub.pocketbase.ApiClient;
 import lol.hub.pocketbase.models.ApiError;
 import lol.hub.pocketbase.models.transfer.LoginRequestBody;
 import lol.hub.pocketbase.models.transfer.LoginResponseBody;
@@ -11,7 +11,7 @@ import lol.hub.pocketbase.models.transfer.LoginResponseBody;
  * <a href="https://pocketbase.io/docs/api-users/">api docs</a>
  */
 public class UserService extends BaseService {
-    public UserService(HttpClient http, Gson gson) {
+    public UserService(ApiClient http, Gson gson) {
         super(http, gson);
     }
 

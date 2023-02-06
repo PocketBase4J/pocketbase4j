@@ -2,7 +2,7 @@ package lol.hub.pocketbase.services;
 
 import com.google.gson.Gson;
 import lol.hub.pocketbase.AuthRole;
-import lol.hub.pocketbase.HttpClient;
+import lol.hub.pocketbase.ApiClient;
 import lol.hub.pocketbase.models.ApiError;
 
 /**
@@ -12,7 +12,7 @@ public class AuthService extends BaseService {
     private final AdminService adminService;
     private final UserService userService;
 
-    public AuthService(HttpClient http, Gson gson, AdminService adminService, UserService userService) {
+    public AuthService(ApiClient http, Gson gson, AdminService adminService, UserService userService) {
         super(http, gson);
         this.adminService = adminService;
         this.userService = userService;

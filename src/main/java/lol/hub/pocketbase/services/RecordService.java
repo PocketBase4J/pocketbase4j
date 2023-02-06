@@ -1,13 +1,13 @@
 package lol.hub.pocketbase.services;
 
 import com.google.gson.Gson;
-import lol.hub.pocketbase.HttpClient;
+import lol.hub.pocketbase.ApiClient;
 
 /**
  * <a href="https://pocketbase.io/docs/api-records/">api docs</a>
  */
 public class RecordService extends BaseService {
-    public RecordService(HttpClient http, Gson gson) {
+    public RecordService(ApiClient http, Gson gson) {
         super(http, gson);
     }
 
