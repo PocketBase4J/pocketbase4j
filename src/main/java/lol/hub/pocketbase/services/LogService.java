@@ -21,10 +21,10 @@ public class LogService extends BaseService {
     // TODO: GET "/api/logs/requests/:id"
 
     public Page<RequestLog> listRequestLogs() throws ApiError {
-        return http.get("/api/logs/requests", TypeToken.getParameterized(Page.class, RequestLog.class).getType());
+        return http.send("GET", "/api/logs/requests", null, TypeToken.getParameterized(Page.class, RequestLog.class).getType());
     }
 
     public List<LogStats> requestLogsStatistics() throws ApiError {
-        return http.get("/api/logs/requests/stats", TypeToken.getParameterized(List.class, LogStats.class).getType());
+        return http.send("GET", "/api/logs/requests/stats", null, TypeToken.getParameterized(List.class, LogStats.class).getType());
     }
 }
