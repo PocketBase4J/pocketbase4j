@@ -23,9 +23,14 @@ jobs:
           distribution: 'temurin'
           check-latest: true
           cache: 'gradle'
+      - uses: actions/setup-go@v3
+        with:
+          go-version-file: 'testenv/go.mod'
+          check-latest: true
+          cache: true
       - name: 'Run tests'
         run: |
-          (make pb-serve &)
+          (make serve &)
           sleep 1
           make tests
           status=$?
