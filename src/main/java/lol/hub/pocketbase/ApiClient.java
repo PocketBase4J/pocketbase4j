@@ -21,8 +21,7 @@ public class ApiClient {
     private final URI baseUrl;
     private final HttpClient httpClient;
     private final Map<String, String> headers = new HashMap<>();
-    private AuthRole authRole;
-    private BaseAuthStore authStore;
+    private final BaseAuthStore authStore;
 
     public ApiClient(URI baseUrl) {
         this(baseUrl, new BaseAuthStore());
@@ -30,7 +29,6 @@ public class ApiClient {
 
     public ApiClient(URI baseUrl, BaseAuthStore authStore) {
         this.baseUrl = baseUrl;
-        this.authRole = AuthRole.GUEST;
         this.authStore = authStore;
         this.httpClient = HttpClient.newHttpClient();
         this.headers.put("User-Agent", HEADER_USER_AGENT);
@@ -41,31 +39,18 @@ public class ApiClient {
         return status >= 200 && status < 300;
     }
 
-    public void setAuth(AuthRole role, String token) {
-        if (role == AuthRole.GUEST || token == null || token.isEmpty()) {
-            this.headers.remove("Authorization");
-            this.authRole = AuthRole.GUEST;
-        }
-        this.headers.put("Authorization", role.authPrefix() + token);
-        this.authRole = role;
-    }
-
-    public AuthRole getAuth() {
-        return this.authRole;
-    }
-
     public <T> T send(String method, String path, String requestBody, Type responseBodyType) throws ApiError {
-        HashMap<String, String> headers = new HashMap<>();
-        HttpRequest.BodyPublisher bodyPublisher = requestBody == null ? HttpRequest.BodyPublishers.noBody() : HttpRequest.BodyPublishers.ofString(requestBody);
-        HttpRequest.Builder builder = HttpRequest.newBuilder()
+        HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.noBody();
+        if (requestBody != null && !requestBody.isBlank()) {
+            bodyPublisher = HttpRequest.BodyPublishers.ofString(requestBody);
+            this.headers.put("Content-Type", HEADER_CONTENT_TYPE_JSON);
+        }
+        HttpRequest.Builder reqBuilder = HttpRequest.newBuilder()
             .uri(baseUrl.resolve(path))
             .method(method, bodyPublisher);
-        headers.putAll(this.headers);
-        headers.forEach(builder::header);
-        if (this.authStore.getToken() != null) {
-            builder.header("Authorization", this.authStore.getToken());
-        }
-        return readBody(send(builder.build()), responseBodyType);
+        this.headers.forEach(reqBuilder::header);
+        this.authStore.getToken().ifPresent(token -> reqBuilder.header("Authorization", token));
+        return readBody(send(reqBuilder.build()), responseBodyType);
     }
 
     private String send(HttpRequest request) throws ApiError {
