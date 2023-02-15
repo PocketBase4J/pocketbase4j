@@ -1,13 +1,13 @@
 package lol.hub.pocketbase.services;
 
 import com.google.gson.Gson;
-import lol.hub.pocketbase.HttpClient;
+import lol.hub.pocketbase.ApiClient;
 
 /**
  * <a href="https://pocketbase.io/docs/api-realtime/">api docs</a>
  */
 public class RealtimeService extends BaseService {
-    public RealtimeService(HttpClient http, Gson gson) {
+    public RealtimeService(ApiClient http, Gson gson) {
         super(http, gson);
     }
 

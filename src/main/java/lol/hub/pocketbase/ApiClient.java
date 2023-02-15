@@ -3,29 +3,38 @@ package lol.hub.pocketbase;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lol.hub.pocketbase.models.ApiError;
+import lol.hub.pocketbase.stores.BaseAuthStore;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URI;
+import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HttpClient {
-    private static final Map.Entry<String, String> contentTypeJsonHeader = Map.entry("Content-Type", "application/json");
+public class ApiClient {
+    private static final String HEADER_USER_AGENT = "PocketBase4J/0.1";
+    private static final String HEADER_CONTENT_TYPE_JSON = "application/json";
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final URI baseUrl;
-    private final java.net.http.HttpClient client;
+    private final HttpClient httpClient;
     private final Map<String, String> headers = new HashMap<>();
     private AuthRole authRole;
+    private BaseAuthStore authStore;
 
-    public HttpClient(URI baseUrl) {
-        this.authRole = AuthRole.GUEST;
+    public ApiClient(URI baseUrl) {
+        this(baseUrl, new BaseAuthStore());
+    }
+
+    public ApiClient(URI baseUrl, BaseAuthStore authStore) {
         this.baseUrl = baseUrl;
-        this.client = java.net.http.HttpClient.newHttpClient();
-        this.headers.put("User-Agent", "PocketBase-Java/0.1");
-        this.headers.put("Accept", "application/json");
+        this.authRole = AuthRole.GUEST;
+        this.authStore = authStore;
+        this.httpClient = HttpClient.newHttpClient();
+        this.headers.put("User-Agent", HEADER_USER_AGENT);
+        this.headers.put("Accept", HEADER_CONTENT_TYPE_JSON);
     }
 
     public static boolean isStatusOkay(int status) {
@@ -45,35 +54,24 @@ public class HttpClient {
         return this.authRole;
     }
 
-    public <T> T getJson(String path, Type responseBodyType) throws ApiError {
+    public <T> T send(String method, String path, String requestBody, Type responseBodyType) throws ApiError {
+        HashMap<String, String> headers = new HashMap<>();
+        HttpRequest.BodyPublisher bodyPublisher = requestBody == null ? HttpRequest.BodyPublishers.noBody() : HttpRequest.BodyPublishers.ofString(requestBody);
         HttpRequest.Builder builder = HttpRequest.newBuilder()
             .uri(baseUrl.resolve(path))
-            .GET();
+            .method(method, bodyPublisher);
+        headers.putAll(this.headers);
         headers.forEach(builder::header);
-        HttpRequest request = builder.build();
-        String responseBody = send(request);
-        return readBody(responseBody, responseBodyType);
+        if (this.authStore.getToken() != null) {
+            builder.header("Authorization", this.authStore.getToken());
+        }
+        return readBody(send(builder.build()), responseBodyType);
     }
-
-    public <T> T postJson(String path, String requestBody, Class<T> responseBodyType) throws ApiError {
-        HttpRequest.Builder builder = HttpRequest.newBuilder()
-            .uri(baseUrl.resolve(path))
-            .POST(HttpRequest.BodyPublishers.ofString(requestBody));
-        headers.forEach(builder::header);
-        builder.header(contentTypeJsonHeader.getKey(), contentTypeJsonHeader.getValue());
-        HttpRequest request = builder.build();
-        String responseBody = send(request);
-        return readBody(responseBody, responseBodyType);
-    }
-
-    // TODO: PUT
-    // TODO: PATCH
-    // TODO: DELETE
 
     private String send(HttpRequest request) throws ApiError {
         HttpResponse<String> response;
         try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
