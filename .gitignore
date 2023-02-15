@@ -1,7 +1,6 @@
 /.gradle/
 /.idea/
 /.vscode/
-
-/bin/
 /build/
 /run/
+/testenv/pb_data
