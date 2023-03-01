@@ -1,28 +1,20 @@
-<h1 align="center"><img src="https://i.ibb.co/vYKNZxH/header.png" alt="header"></h1>
+# pocketbase4j
 
-<p align="center">
-    <a href="https://github.com/nothub/PocketBase4J/releases"><img src="https://shields.io/github/downloads/nothub/pocketbase4j/total"></a>
-    <a href="https://github.com/nothub/PocketBase4J/graphs/contributors"><img src="https://img.shields.io/github/contributors/nothub/pocketbase4j?color=dark-green"></a>
-    <a href="https://github.com/nothub/PocketBase4J/issues"><img src="https://img.shields.io/github/issues/nothub/pocketbase4j"></a>
-</p>
+**pocketbase4j** is an open-source project that aims to provide an easy-to-use interface for accessing [pocketbase.io](https://pocketbase.io)'s APIs from your Java applications.
 
-<p align="center">
-    This project is <b>WIP</b> and should not yet be used in any shape or form!
-    <br>
-    <br>
-    <a href="https://github.com/nothub/PocketBase4J/issues">Report Bugs</a>
-    &middot;
-    <a href="https://github.com/nothub/PocketBase4J/issues">Request Feature</a>
-</p>
+## Installation
 
-## Roadmap
+WIP
 
-- [ ] parameters
-  - [ ] path
-  - [ ] body
-  - [ ] query
-- [ ] pagination handling
-- [ ] schema handling
-- [ ] records
-- [ ] collections
-- [ ] realtime sse
+## Usage
+
+WIP
+
+## Contributing
+
+We welcome any contributions to this library! If you want to contribute to this project, please take a look at the [contributing guidelines](CONTRIBUTING.md) to see how you can help.
+
+## License
+
+[MIT](LICENSE)
+
