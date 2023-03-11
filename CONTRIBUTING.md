@@ -6,6 +6,8 @@ Thank you for your interest in contributing to **pocketbase4j**! We welcome any 
 
 *As this project is still quite new, we haven't yet defined a strict set of guidelines for contributing to this project, so we will leave this choice to you for the time being. If we find your behavior unacceptable in the context of this project, we will let you know soon enough. However, we will try to keep this section updated as we make progress on this project.*
 
+Fow now, if you wish to make a suggestion, please create a new branch and submit a pull request. We will review your changes and merge them into the master branch if we find them useful.
+
 ## Code of Conduct
 
 We expect all contributors to follow our [Code of Conduct](CODE_OF_CONDUCT.md). Please read it before contributing to this project.
