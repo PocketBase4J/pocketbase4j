@@ -28,7 +28,7 @@ jobs:
           check-latest: true
           cache: 'gradle'
       - run: 'cp testenv/go.sum go.sum'
-      - uses: actions/setup-go@v3
+      - uses: actions/setup-go@v4
         with:
           go-version-file: 'testenv/go.mod'
           check-latest: true
