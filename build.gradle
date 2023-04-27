@@ -41,7 +41,7 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.7'
     implementation 'com.google.code.gson:gson:2.10.1'
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.9.3'
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.9.2'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.9.3'
     testImplementation group: 'net.jodah', name: 'concurrentunit', version: '0.4.6'
 }
 
